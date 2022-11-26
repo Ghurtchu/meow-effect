@@ -62,7 +62,26 @@ object TypeClassRecap {
 
   }
 
+  object applicative {
+    trait MyApplicative[F[_]] {
+      def pure[A](value: A): F[A] // lifts value into some kind of container (Try, Future, List, Option, Either etc..)
+    }
+  }
+
+  object cats_applicative {
+    import cats.Applicative
+    import cats.syntax.applicative._
+
+    val listApplicative: Applicative[List] = Applicative[List]
+    val liftedInt: List[Int] = listApplicative.pure(44)
+
+    // extension methods
+    val oneOption: Option[Int] = 1.pure[Option]
+    val oneList: List[Int]     = 42.pure[List]
+  }
+
   def main(args: Array[String]): Unit = {
+
 
   }
 
