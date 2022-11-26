@@ -63,7 +63,7 @@ object TypeClassRecap {
   }
 
   object applicative {
-    trait MyApplicative[F[_]] {
+    trait MyApplicative[F[_]] extends functor.MyFunctor[F] {
       def pure[A](value: A): F[A] // lifts value into some kind of container (Try, Future, List, Option, Either etc..)
     }
   }
@@ -109,10 +109,28 @@ object TypeClassRecap {
 
     import cats.FlatMap
     import cats.syntax.flatMap._
+    import cats.syntax.functor._
 
     def flatMap[F[_]: FlatMap, A, B](fa: F[A])(f: A => F[B]): F[B] = fa flatMap f
 
+    def crossProduct[F[_]: FlatMap, A, B](fa: F[A], fb: F[B]): F[(A, B)] = for {
+      a <- fa
+      b <- fb // map syntax from functor
+    } yield (a, b)
+
     val res = flatMap[List, Int, String](1 :: 2 :: Nil)(n => List(s"$n", s"${n + 1}"))
+
+  }
+
+  object monad {
+
+    import applicative.MyApplicative
+    import flatmap.FlatMap
+
+    trait MyMonad[F[_]] extends MyApplicative[F] with FlatMap[F]
+  }
+
+  object cats_monad {
 
   }
 
