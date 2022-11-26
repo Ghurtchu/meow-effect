@@ -105,6 +105,17 @@ object TypeClassRecap {
 
   }
 
+  object cats_flatmap {
+
+    import cats.FlatMap
+    import cats.syntax.flatMap._
+
+    def flatMap[F[_]: FlatMap, A, B](fa: F[A])(f: A => F[B]): F[B] = fa flatMap f
+
+    val res = flatMap[List, Int, String](1 :: 2 :: Nil)(n => List(s"$n", s"${n + 1}"))
+
+  }
+
   def main(args: Array[String]): Unit = {
 
   }
