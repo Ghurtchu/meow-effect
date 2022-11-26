@@ -1,5 +1,7 @@
 package experiments
 
+import experiments.TokenExperiment.second_approach.ContributorFetchService
+
 object TokenExperiment {
 
   object first_approach {
@@ -16,11 +18,11 @@ object TokenExperiment {
       }
     }
 
-    trait ContributorFetchingService[A](tokenProvider: TokenProvider[A]) {
+    trait ContributorFetchingService {
       def getContributors(url: String): List[String]
     }
 
-    class ContributorFetchingServiceLive(tokenProvider: TokenProvider[GithubToken]) extends ContributorFetchingService[GithubToken](tokenProvider) {
+    class ContributorFetchingServiceLive(tokenProvider: TokenProvider[GithubToken]) extends ContributorFetchingService {
       override def getContributors(url: String): List[String] = {
         val githubToken = tokenProvider.provide
         // use githubToken
@@ -28,6 +30,35 @@ object TokenExperiment {
         "contrib.1" :: "contrib.2" :: "contrib.3" :: Nil
       }
     }
+  }
+
+  object second_approach {
+
+    trait TokenReader[A] {
+      def read: A
+    }
+
+    final case class GithubToken(value: String)
+
+    class GithubTokenReader extends TokenReader[GithubToken] {
+      override def read: GithubToken = GithubToken("github.token")
+    }
+
+    final case class Contributor(name: String)
+
+    trait ContributorFetchService {
+      def fetch[A](url: String)(implicit tokenReader: TokenReader[A]): List[String]
+    }
+
+    class Impl extends ContributorFetchService {
+      override def fetch[A](url: String)(implicit tokenReader: TokenReader[A]): List[String] = {
+        val token = tokenReader.read
+        // use it
+
+        "contrib.1" :: "contrib.2" :: "contrib.3" :: Nil
+      }
+    }
+
   }
 
 }
