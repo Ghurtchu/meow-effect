@@ -146,6 +146,26 @@ object TypeClassRecap {
     val res = perform[Option, Int, String, Boolean](Option(1), Option("1"))(_ == _.toInt)
   }
 
+  object applicative_error {
+    import applicative._
+
+    trait MyApplicativeError[F[_], E] extends MyApplicative[F]{
+      def raiseError[A](e: E): F[A] // build instances of F[A]
+    }
+
+  }
+
+  object cats_applicative_error {
+
+    import cats.ApplicativeError
+
+    type ErrorOr[A] = Either[String, A]
+
+    val failed: ErrorOr[Int] = ApplicativeError[ErrorOr, String].raiseError("Boom")
+    val successful: ErrorOr[Int] = ApplicativeError[ErrorOr, String].pure[Int](42)
+
+  }
+
 
   def main(args: Array[String]): Unit = {
 
