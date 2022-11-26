@@ -80,9 +80,32 @@ object TypeClassRecap {
     val oneList: List[Int]     = 42.pure[List]
   }
 
-  def main(args: Array[String]): Unit = {
+  object flatmap {
+    trait FlatMap[F[_]] {
+      def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B]
+    }
 
+    object FlatMap {
+      def apply[F[_]](implicit flatMap: FlatMap[F]): FlatMap[F] = flatMap
+
+      given listFlatmap: FlatMap[List] with {
+        override def flatMap[A, B](fa: List[A])(f: A => List[B]): List[B] = fa.flatMap(f)
+      }
+
+      object FlatMapSyntax {
+        extension[F[_]: FlatMap, A](self: F[A])
+          def flatMap[B](f: A => F[B]): F[B] = FlatMap[F].flatMap(self)(f)
+      }
+
+    }
+
+    import flatmap.FlatMap.FlatMapSyntax._
+
+    def flatMap[F[_]: FlatMap, A, B](fa: F[A])(f: A => F[B]): F[B] = fa.flatMap(f)
 
   }
 
+  def main(args: Array[String]): Unit = {
+
+  }
 }
