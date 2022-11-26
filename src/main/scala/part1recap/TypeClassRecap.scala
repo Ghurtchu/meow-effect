@@ -166,6 +166,24 @@ object TypeClassRecap {
 
   }
 
+  object traverse {
+
+    trait Traverse[F[_]] extends functor.MyFunctor[F] {
+
+    }
+
+  }
+
+  object cats_traverse {
+    import cats.Traverse
+    val listTraverse = Traverse[List]
+    val data: List[Option[Int]] = Some(1) :: Some(2) :: None :: Nil
+    val optionList: Option[List[String]] = listTraverse.traverse(1 :: 2 :: 3 :: Nil)(num => Option(num.toString))
+
+    val seq: Option[List[Int]] = listTraverse.sequence(data) // love this <3
+
+  }
+
 
   def main(args: Array[String]): Unit = {
 
