@@ -127,12 +127,25 @@ object TypeClassRecap {
     import applicative.MyApplicative
     import flatmap.FlatMap
 
-    trait MyMonad[F[_]] extends MyApplicative[F] with FlatMap[F]
+    trait MyMonad[F[_]] extends MyApplicative[F] with FlatMap[F] {
+      override def map[A, B](fa: F[A])(f: A => B): F[B] = flatMap(fa)(f andThen pure)
+    }
   }
 
   object cats_monad {
 
+    import cats.Monad
+    import cats.syntax.flatMap._
+    import cats.syntax.functor._
+
+    def perform[F[_]: Monad, A, B, C](fa: F[A], fb: F[B])(f: (A, B) => C): F[C] = for {
+      a <- fa
+      b <- fb
+    } yield f(a, b)
+
+    val res = perform[Option, Int, String, Boolean](Option(1), Option("1"))(_ == _.toInt)
   }
+
 
   def main(args: Array[String]): Unit = {
 
