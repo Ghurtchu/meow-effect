@@ -1,5 +1,8 @@
 package part2effects
 
+// IO Runtime
+import cats.effect.unsafe.implicits.global
+
 object CatsIOIntro {
 
   import cats.effect.IO
@@ -15,5 +18,9 @@ object CatsIOIntro {
   }
 
   val delayedIO2: IO[String] = IO("Hey there") // sugar syntax for IO.apply
+
+  def main(args: Array[String]): Unit = {
+    println(delayedIO.unsafeRunSync())
+  }
 
 }
