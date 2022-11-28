@@ -54,9 +54,14 @@ object Effects {
     def flatMap[B](f: A => IOMonad[B]): IOMonad[B] = new IOMonad[B](() => f(unsafeRun()).unsafeRun())
   }
 
+  val printIO: IOMonad[Unit] = for {
+    _ <- IOMonad(() => println("Hello there"))
+    _ <- IOMonad(() => println("Hello there again.."))
+  } yield ()
+
 
   def main(args: Array[String]): Unit = {
-
+    printIO.unsafeRun() // only place where side effect is produced
   }
 
 }
