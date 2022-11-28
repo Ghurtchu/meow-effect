@@ -13,6 +13,12 @@ object Effects {
 
   // example of side effect: print to the console
   val printSomething: Unit = println("Cats effect")
+  val printSomething_v2: Unit = () // line 16 and line 15 are not the same, so this breaks RT thereby this is impure
+
+  // example: change the variable
+  var anInt = 0
+  val value: Unit = (anInt += 1) // side effect
+  val value_2: Unit = () // breaks RT
 
   def main(args: Array[String]): Unit = {
 
