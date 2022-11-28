@@ -19,13 +19,15 @@ object IOExercises {
   def forever_v2[A](ioA: IO[A]): IO[A] = ioA >> forever_v2(ioA) // stack-safe
   def forever_v3[A](ioA: IO[A]): IO[A] = ioA.foreverM // cats API
 
-
-
   // ex4 - just map
   def convert[A, B](ioa: IO[A], b: B): IO[B] = ioa.map(_ => b)
+  def convert_v2[A, B](ioa: IO[A], b: B): IO[B] = ioa as b // cats API
 
   // ex5 - discard value just return unit
   def unit[A](ioa: IO[A]): IO[Unit] = convert(ioa, ())
+  def unit_v2[A](ioa: IO[A]): IO[Unit] = ioa.map(_ => ())
+  def unit_v3[A](ioa: IO[A]): IO[Unit] = ioa as () // cats API
+  def unit_v4[A](ioa: IO[A]): IO[Unit] = ioa.void // cats API
 
   def main(args: Array[String]): Unit = {
     println(takeRight(IO.delay {
