@@ -7,16 +7,19 @@ object IOExercises {
 
   // ex1 - sequence two IO-s and take the result of the last one
   def takeRight[A, B](ioA: IO[A], ioB: IO[B]): IO[B] = ioA.flatMap(_ => ioB)
+  def takeRight_v2[A, B](ioA: IO[A], ioB: IO[B]): IO[B] = ioA *> ioB // it's like ZIO.zipRight or something
+  def takeRight_v3[A, B](ioA: IO[A], ioB: IO[B]): IO[B] = ioA >> ioB // takes a by name param (unevaluated IO)
 
   // ex2 - sequence two IO-s and take the result of the first one
   def takeLeft[A, B](ioA: IO[A], ioB: IO[B]): IO[A] = ioA.flatMap(a => ioB.map(_ => a))
+  def takeLeft_v2[A, B](ioA: IO[A], ioB: IO[B]): IO[A] = ioA <* ioB // kinda zipLeft thingy
 
   // ex3 - run effect forever
-  def forever[A](ioA: IO[A]): IO[A] = ioA.flatMap(_ => {
-    val a = ioA.unsafeRunSync()
-    println(a)
-    forever(IO(a))
-  })
+  def forever[A](ioA: IO[A]): IO[A] = ioA.flatMap(_ => forever(ioA))
+  def forever_v2[A](ioA: IO[A]): IO[A] = ioA >> forever_v2(ioA) // stack-safe
+  def forever_v3[A](ioA: IO[A]): IO[A] = ioA.foreverM // cats API
+
+
 
   // ex4 - just map
   def convert[A, B](ioa: IO[A], b: B): IO[B] = ioa.map(_ => b)
