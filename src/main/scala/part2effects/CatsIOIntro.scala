@@ -19,8 +19,18 @@ object CatsIOIntro {
 
   val delayedIO2: IO[String] = IO("Hey there") // sugar syntax for IO.apply
 
+  val mol = IO(42)
+  val mappedMol = mol.map(_ + 5)
+  val mappedMolPrinted = mappedMol.flatMap(n => IO(println(n)))
+
+  import cats.syntax.apply._
+  val summed = (mol, mol).mapN { (a, b) =>
+    a + b
+  }
+
   def main(args: Array[String]): Unit = {
-    println(delayedIO.unsafeRunSync())
+    mappedMolPrinted.unsafeRunSync()
+    println(summed.unsafeRunSync())
   }
 
 }
