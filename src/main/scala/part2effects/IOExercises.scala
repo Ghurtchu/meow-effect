@@ -56,7 +56,6 @@ object IOExercises {
       }.unsafeRunSync()
     }
 
-
   }
 
 }
