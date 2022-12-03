@@ -5,12 +5,12 @@ object ErrorHandling {
   import cats.effect.IO
   import cats.effect.unsafe.implicits.global
 
-
   // IO: pure, delay, defer
   // create failed effects
   val failedEffect = IO.delay[Int](throw new RuntimeException("boom")) // not a good approach
 
   val failedEffectBetter = IO.raiseError[Int](new ArithmeticException("Division by zero"))
+
 
   // handle exceptions
   val dealtError: IO[Any] = failedEffectBetter.handleErrorWith {

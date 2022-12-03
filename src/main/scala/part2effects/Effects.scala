@@ -58,8 +58,7 @@ object Effects {
     _ <- IOMonad(() => println("Hello there"))
     _ <- IOMonad(() => println("Hello there again.."))
   } yield ()
-
-
+  
   def main(args: Array[String]): Unit = {
     printIO.unsafeRun() // only place where side effect is produced
   }
