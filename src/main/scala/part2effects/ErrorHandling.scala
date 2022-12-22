@@ -54,6 +54,14 @@ object ErrorHandling {
     case Left(value)  => IO raiseError value
     case Right(value) => IO delay value
 
+  def handleIOError[A](io: IO[A])(handler: Throwable => A): IO[A] =
+    io.redeem(handler, identity)
+
+  def handleIOError2[A](io: IO[A])(handler: Throwable => IO[A]): IO[A] =
+    io.redeemWith(handler, IO.pure)
+
+  failedEffect.handleErrorWith(_ => IO.pure(5))
+
 
   def main(args: Array[String]): Unit = {
 
