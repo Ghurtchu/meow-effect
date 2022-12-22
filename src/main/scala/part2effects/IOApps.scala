@@ -35,3 +35,9 @@ object FirstCatsEffectApp extends IOApp {
   }
 
 }
+
+import cats.effect.IOApp._
+
+object IOAppSimple extends IOApp.Simple {
+  override def run: IO[Unit] = IO.pure(println("boom"))
+}
