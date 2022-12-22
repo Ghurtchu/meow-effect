@@ -4,6 +4,10 @@ import experiments.TokenExperiment.second_approach.ContributorFetchService
 
 object TokenExperiment {
 
+  def main(args: Array[String]): Unit = {
+
+  }
+
   object first_approach {
     trait TokenProvider[A] {
       def provide: A
